@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using SalesWebMCV.Models;
 using SalesWebMCV.Data;
+using SalesWebMCV.Services;
 
 namespace SalesWebMCV
 {
@@ -42,6 +43,7 @@ namespace SalesWebMCV
 
             //Registra o serviço no sistema de injeção de dependência.
             services.AddScoped<SeedingService>();
+            services.AddScoped<SellerService>();
 
         }
 
