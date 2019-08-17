@@ -44,6 +44,7 @@ namespace SalesWebMCV
             //Registra o serviço no sistema de injeção de dependência.
             services.AddScoped<SeedingService>();
             services.AddScoped<SellerService>();
+            services.AddScoped<DepartmentsService>();
 
         }
 
