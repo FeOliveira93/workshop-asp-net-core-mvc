@@ -63,12 +63,30 @@ namespace SalesWebMCV.Controllers
             return View(obj);
         }
 
+        //Recebe post com delete.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
             _sellerService.Remove(id);
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Details(int? id)
+        {
+            if (id is null)
+            {
+                return NotFound();
+            }
+
+            var obj = _sellerService.FindById(id.Value);
+
+            if (obj is null)
+            {
+                return NotFound();
+            }
+
+            return View(obj);
         }
     }
 }
