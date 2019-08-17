@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using SalesWebMCV.Models;
 using SalesWebMCV.Models.ViewModels;
 using SalesWebMCV.Services;
+using SalesWebMCV.Services.Exceptions;
 
 namespace SalesWebMCV.Controllers
 {
@@ -87,6 +88,49 @@ namespace SalesWebMCV.Controllers
             }
 
             return View(obj);
+        }
+
+        public IActionResult Edit(int? id)
+        {
+            if(id is null)
+            {
+                return NotFound();
+            }
+
+            var obj = _sellerService.FindById(id.Value);
+
+            if(obj is null)
+            {
+                return NotFound();
+            }
+
+            List<Department> departments = _departmentsService.FindAll();
+            SellerFormViewModel viewModel = new SellerFormViewModel() { Departments = departments, Seller = obj };
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, Seller seller)
+        {
+            if(id != seller.Id)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                _sellerService.Update(seller);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+            catch (DbConcurrencyException)
+            {
+                return BadRequest();
+            }
         }
     }
 }
