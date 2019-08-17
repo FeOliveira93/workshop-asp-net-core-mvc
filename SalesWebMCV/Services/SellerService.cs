@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using SalesWebMCV.Services.Exceptions;
-using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace SalesWebMCV.Services
@@ -35,9 +34,16 @@ namespace SalesWebMCV.Services
 
         public async Task RemoveAsync(int id)
         {
-            var obj = _context.Seller.Find(id);
-            _context.Seller.Remove(obj);
-            await _context.SaveChangesAsync();
+            try
+            {
+                var obj = _context.Seller.Find(id);
+                _context.Seller.Remove(obj);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException db)
+            {
+                throw new IntegrityException(db.Message);
+            }
         }
 
         public async Task UpdateAsync(Seller obj)
